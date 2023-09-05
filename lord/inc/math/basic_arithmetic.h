@@ -1,0 +1,6 @@
+#ifndef LORD_MATH_BASIC_ARITHMETIC_H
+#define LORD_MATH_BASIC_ARITHMETIC_H
+
+int add(int a, int b);
+
+#endif // LORD_MATH_BASIC_ARITHMETIC_H
