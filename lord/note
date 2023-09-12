@@ -1,0 +1,13 @@
+
+for main project, use
+
+conan install . -b=missing
+
+one can set options(whether a dependency is imported as shared, or settings such as whether to build debug)
+e.g.:
+conan install . -b=missing -o=normal/1.0:shared=True -o=zlib/1.3:shared=True -s=build_type=Debug
+
+ffmpeg is just hard to build - I can't fix build errors
+
+
+

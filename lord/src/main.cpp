@@ -10,6 +10,8 @@
 // zlib
 #include "zlib.h"
 
+#include "spdlog/spdlog.h"
+
 // nlohmann_json
 #include "nlohmann/json.hpp"
 
@@ -20,15 +22,18 @@ int main(int argc, char **argv)
   json value;
   value["love"] = "you";
   value["the_number"] = 42;
+  value["C++"] = "is bad";
 
   auto json_str = value.dump();
 
   printf("json str = %s\n", json_str.c_str());
+  spdlog::error("this {}", json_str);
   
   printf("add(3, 5) == %d\n", add(3, 5));
 
   auto str = string_utility_test();
   printf("%s\n", str.c_str());
+
 
   char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
     "for C and C++ development, allowing development teams to easily and efficiently "

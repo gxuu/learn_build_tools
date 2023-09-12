@@ -1,0 +1,6 @@
+
+to build a library use 
+
+conan create .
+
+and set optinos and settings as normal

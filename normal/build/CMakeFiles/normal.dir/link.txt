@@ -1,0 +1,2 @@
+/usr/bin/ar qc libnormal.a CMakeFiles/normal.dir/src/str/string_utility.cpp.o
+/usr/bin/ranlib libnormal.a
