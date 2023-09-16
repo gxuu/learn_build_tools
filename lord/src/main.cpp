@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <string.h>
+#include <vector>
 
 #include "math/basic_arithmetic.h"
 // normal lib
@@ -15,7 +16,7 @@
 // nlohmann_json
 #include "nlohmann/json.hpp"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv) 
 {
   using nlohmann::json;
 
