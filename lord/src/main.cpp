@@ -1,7 +1,9 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <string>
+#include <stdlib.h>
 #include <string.h>
+
+#include <string>
+#include <type_traits>
 #include <vector>
 
 #include "math/basic_arithmetic.h"
@@ -9,19 +11,20 @@
 #include "normal/str/string_utility.h"
 
 // zlib
+#include "spdlog/spdlog.h"
 #include "zlib.h"
 
-#include "spdlog/spdlog.h"
-
 // nlohmann_json
+#include <ranges>
+
 #include "nlohmann/json.hpp"
 
-int main(int argc, char **argv) 
-{
+int main(int argc, char **argv) {
   using nlohmann::json;
 
   json value;
   value["love"] = "you";
+  value["haha"] = "f";
   value["the_number"] = 42;
   value["C++"] = "is bad";
 
@@ -29,26 +32,29 @@ int main(int argc, char **argv)
 
   printf("json str = %s\n", json_str.c_str());
   spdlog::error("this {}", json_str);
-  
+
   printf("add(3, 5) == %d\n", add(3, 5));
 
   auto str = string_utility_test();
   printf("%s\n", str.c_str());
 
-
-  char buffer_in [256] = {"Conan is a MIT-licensed, Open Source package manager for C and C++ development "
-    "for C and C++ development, allowing development teams to easily and efficiently "
-      "manage their packages and dependencies across platforms and build systems."};
-  char buffer_out [256] = {0};
+  char buffer_in[256] = {
+      "Conan is a MIT-licensed, Open Source package manager "
+      "for C and C++ development "
+      "for C and C++ development, allowing development "
+      "teams to easily and efficiently "
+      "manage their packages and dependencies across "
+      "platforms and build systems."};
+  char buffer_out[256] = {0};
 
   z_stream defstream;
   defstream.zalloc = Z_NULL;
   defstream.zfree = Z_NULL;
   defstream.opaque = Z_NULL;
-  defstream.avail_in = (uInt) strlen(buffer_in);
-  defstream.next_in = (Bytef *) buffer_in;
-  defstream.avail_out = (uInt) sizeof(buffer_out);
-  defstream.next_out = (Bytef *) buffer_out;
+  defstream.avail_in = (uInt)strlen(buffer_in);
+  defstream.next_in = (Bytef *)buffer_in;
+  defstream.avail_out = (uInt)sizeof(buffer_out);
+  defstream.next_out = (Bytef *)buffer_out;
 
   deflateInit(&defstream, Z_BEST_COMPRESSION);
   deflate(&defstream, Z_FINISH);
@@ -56,8 +62,6 @@ int main(int argc, char **argv)
 
   printf("Uncompressed size is: %lu\n", strlen(buffer_in));
   printf("Compressed size is: %lu\n", strlen(buffer_out));
-
-  printf("ZLIB VERSION: %s\n", zlibVersion());
 
   return EXIT_SUCCESS;
 }

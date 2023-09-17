@@ -4,6 +4,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 project(lord CXX)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	add_compile_options(-std=c++20)
+endif()
+
+
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(main)

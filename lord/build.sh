@@ -18,3 +18,5 @@ conan install . \
   # -o=ffmpeg/6.0:with_libx265=False
 
 cmake --preset conan-debug 
+
+cp build/Debug/compile_commands.json build/compile_commands.json
