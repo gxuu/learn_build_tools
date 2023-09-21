@@ -149,4 +149,5 @@ fuzz-*.log
 *.json
 
 !.gitignore
+!.clang-format
 
