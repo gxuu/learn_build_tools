@@ -19,7 +19,7 @@
 
 #include "nlohmann/json.hpp"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   using nlohmann::json;
 
   json value;
@@ -52,9 +52,9 @@ int main(int argc, char **argv) {
   defstream.zfree = Z_NULL;
   defstream.opaque = Z_NULL;
   defstream.avail_in = (uInt)strlen(buffer_in);
-  defstream.next_in = (Bytef *)buffer_in;
+  defstream.next_in = (Bytef*)buffer_in;
   defstream.avail_out = (uInt)sizeof(buffer_out);
-  defstream.next_out = (Bytef *)buffer_out;
+  defstream.next_out = (Bytef*)buffer_out;
 
   deflateInit(&defstream, Z_BEST_COMPRESSION);
   deflate(&defstream, Z_FINISH);

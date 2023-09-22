@@ -2,12 +2,11 @@ cmake_minimum_required(VERSION 3.27.2)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
-project(lord CXX)
+project(lord LANGUAGES CXX VERSION 0.1)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	add_compile_options(-std=c++20)
 endif()
-
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
