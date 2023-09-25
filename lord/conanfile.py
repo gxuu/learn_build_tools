@@ -11,10 +11,10 @@ class lordRecipe(ConanFile):
 
     def requirements(self):
         self.requires("normal/1.0")
-        self.requires("zlib/1.3")
+        self.requires("zlib/1.2.13")
         self.requires("nlohmann_json/3.11.2")
         self.requires("spdlog/1.12.0")
-        # self.requires("ffmpeg/6.0")
+        self.requires("ffmpeg/6.0")
 
     # this is not needed as long as we don't care build environment
     def build_requirements(self):

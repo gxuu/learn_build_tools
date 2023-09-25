@@ -7,7 +7,11 @@ conan install . \
   -o=normal/1.0:shared=True \
   -o=ZLIB/*:shared=True \
   -o=spdlog/*:shared=False \
+  -o=ffmpeg/6.0:shared=True \
   -s=build_type=Debug
+
+# source the following file for building environment
+# source ./build/Debug/generators/conanbuild.sh
 
   # -o=spdlog/*:wchar_support=True \
   # -o=spdlog/*:wchar_filename=True\
@@ -19,4 +23,9 @@ conan install . \
 
 cmake --preset conan-debug 
 
+# source ./build/Debug/generators/deactivate_conanbuild.sh
+
 cp build/Debug/compile_commands.json build/compile_commands.json
+
+# source the following file for run environment 
+source ./build/Debug/generators/conanrun.sh
