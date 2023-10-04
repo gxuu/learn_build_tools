@@ -1,11 +1,17 @@
-cmake_minimum_required(VERSION 3.27.2)
+cmake_minimum_required(VERSION 3.27.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 project(lord LANGUAGES CXX VERSION 0.1)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	add_compile_options(-std=c++2b)
+	add_compile_options(
+	  -std=c++2b
+	  -Wall
+	  -Wextra
+	  -Werror
+	  -fconcepts-diagnostics-depth=2
+	)
 endif()
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -34,36 +40,6 @@ target_link_libraries(main ffmpeg::avcodec)
 target_link_libraries(main ffmpeg::avformat)
 target_link_libraries(main ffmpeg::avfilter)
 target_link_libraries(main ffmpeg::avdevice)
-
-# target_link_libraries(main PRIVATE ffmpeg::avutil)
-# if (TARGET ffmpeg::avdevice)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_AVDEVICE)
-#     target_link_libraries(main PRIVATE ffmpeg::avdevice)
-# endif ()
-# if (TARGET ffmpeg::avfilter)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_AVFILTER)
-#     target_link_libraries(main PRIVATE ffmpeg::avfilter)
-# endif ()
-# if (TARGET ffmpeg::avformat)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_AVFORMAT)
-#     target_link_libraries(main PRIVATE ffmpeg::avformat)
-# endif ()
-# if (TARGET ffmpeg::avcodec)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_AVCODEC)
-#     target_link_libraries(main PRIVATE ffmpeg::avcodec)
-# endif ()
-# if (TARGET ffmpeg::swscale)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_SWSCALE)
-#     target_link_libraries(main PRIVATE ffmpeg::swscale)
-# endif ()
-# if (TARGET ffmpeg::swresample)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_SWRESAMPLE)
-#     target_link_libraries(main PRIVATE ffmpeg::swresample)
-# endif ()
-# if (TARGET ffmpeg::postproc)
-#     target_compile_definitions(main PRIVATE HAVE_FFMPEG_POSTPROC)
-#     target_link_libraries(main PRIVATE ffmpeg::postproc)
-# endif ()
 
 add_subdirectory(src)
 

@@ -68,17 +68,18 @@
 
 extern "C" {
 #include <libavformat/avformat.h>
+#include <libavutil/avutil.h>
 #include <libavutil/timestamp.h>
 }
 
-static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, const char *tag) {
-  AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
-
-  // printf("%s: pts:%s pts_time:%s dts:%s dts_time:%s duration:%s duration_time:%s stream_index:%d\n", tag,
-  //        av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base), av_ts2str(pkt->dts),
-  //        av_ts2timestr(pkt->dts, time_base), av_ts2str(pkt->duration), av_ts2timestr(pkt->duration, time_base),
-  //        pkt->stream_index);
-}
+// static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, const char *tag) {
+//   [[maybe_unused]] AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
+//
+//   printf("%s: pts:%s pts_time:%s dts:%s dts_time:%s duration:%s duration_time:%s stream_index:%d\n", tag,
+//          av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base), av_ts2str(pkt->dts),
+//          av_ts2timestr(pkt->dts, time_base), av_ts2str(pkt->duration), av_ts2timestr(pkt->duration, time_base),
+//          pkt->stream_index);
+// }
 
 int main(int argc, char **argv) {
   const AVOutputFormat *ofmt = NULL;
@@ -137,7 +138,7 @@ int main(int argc, char **argv) {
 
   ofmt = ofmt_ctx->oformat;
 
-  for(i = 0; i < ifmt_ctx->nb_streams; i++) {
+  for(i = 0; i < static_cast<int>(ifmt_ctx->nb_streams); i++) {
     AVStream *out_stream;
     AVStream *in_stream = ifmt_ctx->streams[i];
     AVCodecParameters *in_codecpar = in_stream->codecpar;
@@ -194,12 +195,12 @@ int main(int argc, char **argv) {
 
     pkt->stream_index = stream_mapping[pkt->stream_index];
     out_stream = ofmt_ctx->streams[pkt->stream_index];
-    log_packet(ifmt_ctx, pkt, "in");
+    // log_packet(ifmt_ctx, pkt, "in");
 
     /* copy packet */
     av_packet_rescale_ts(pkt, in_stream->time_base, out_stream->time_base);
     pkt->pos = -1;
-    log_packet(ofmt_ctx, pkt, "out");
+    // log_packet(ofmt_ctx, pkt, "out");
 
     ret = av_interleaved_write_frame(ofmt_ctx, pkt);
     /* pkt is now blank (av_interleaved_write_frame() takes ownership of

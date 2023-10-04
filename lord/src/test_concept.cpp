@@ -1,12 +1,17 @@
 
-#include <bits/iterator_concepts.h>
 #include <stdio.h>
 
 #include <algorithm>
+#include <atomic>
 #include <concepts>
+#include <coroutine>
 #include <iostream>
+#include <map>
+#include <random>
 #include <ranges>
+#include <set>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 template <class T>
@@ -33,6 +38,7 @@ template <class T>
 concept name = requires {
   T{int{}, std::string{}};
 };
+
 template <class T>
 concept has_X = requires(T t) {
   { t.X() } -> std::same_as<bool>;
@@ -97,11 +103,127 @@ requires requires(I i, std::ptrdiff_t n) {
 
 // todo: try if concept subsumes, try if concept together with type trait subsume
 
-void hunos(std::integral auto x) { printf("integral\n"); }
+template <class T>
+concept CFoo = requires(T foo) {
+  { foo.func() } -> std::integral;
+};
 
-void hunos(std::signed_integral auto x) { printf("signed integral\n"); }
+void hunos(std::integral auto) { printf("integral\n"); }
+
+void hunos(std::signed_integral auto) { printf("signed integral\n"); }
+
+// template <typename T>
+// requires std::integral<std::remove_reference_t<decltype(*std::declval<T>())>>
+template <typename T>
+requires requires(T ptr) { requires std::integral<std::remove_reference_t<decltype(*ptr)>>; }
+auto foobar(T ptr) {
+  return *ptr;
+}
+
+// int main() {
+//   int* a = new int;
+//   auto res = foobar(a);
+//   std::cout << res << std::endl;
+//   return 0;
+// }
+
+// coroutine interface to deal with a simple task
+// - providing resume() to resume the coroutine
+
+class [[nodiscard]] CoroTask {
+public:
+  // initialize members for state and customization:
+  struct promise_type;  // definition later in corotaskpromise.hpp
+  using CoroHdl = std::coroutine_handle<promise_type>;
+
+private:
+  CoroHdl hdl;  // native coroutine handle
+
+public:
+  // constructor and destructor:
+  CoroTask(auto h) : hdl{h} {  // store coroutine handle in interface
+  }
+
+  ~CoroTask() {
+    if(hdl) {
+      hdl.destroy();  // destroy coroutine handle
+    }
+  }
+  // don't copy or move:
+  CoroTask(const CoroTask&) = delete;
+  CoroTask& operator=(const CoroTask&) = delete;
+
+  // API to resume the coroutine
+  // - returns whether there is still something to process
+  bool resume() const {
+    if(!hdl || hdl.done()) {
+      return false;  // nothing (more) to process
+    }
+    hdl.resume();  // RESUME (blocks until suspended again or the end)
+    return !hdl.done();
+  }
+};
+
+struct CoroTask::promise_type {
+  auto get_return_object() {  // init and return the coroutine interface
+    return CoroTask{CoroHdl::from_promise(*this)};
+  }
+  auto initial_suspend() {         // initial suspend point
+    return std::suspend_always{};  // - suspend immediately
+  }
+  void unhandled_exception() {  // deal with exceptions
+    std::terminate();           // - terminate the program
+  }
+  void return_void() {  // deal with the end or co_return;
+  }
+  auto final_suspend() noexcept {  // final suspend point
+    return std::suspend_always{};  // - suspend immediately
+  }
+};
+
+CoroTask coro(int max) {
+  std::cout << "  CORO " << max << " start" << std::endl;
+  for(int val = 1; val <= max; ++val) {
+    std::cout << "  CORO " << val << '/' << max << '\n';
+    co_await std::suspend_always{};
+  }
+  std::cout << "  CORO " << max << " end" << std::endl;
+}
 
 int main() {
-  hunos(3);
-  return 0;
+  namespace vws = std::views;
+
+  // map of composers (mapping their name to their year of birth):
+  std::map<std::string, int> composers{
+      {"Bach",        1685},
+      {"Mozart",      1756},
+      {"Beethoven",   1770},
+      {"Tchaikovsky", 1840},
+      {"Chopin",      1810},
+      {"Vivaldi ",    1678},
+  };
+
+  // iterate over the names of the first three composers born since 1700:
+  for(const auto& elem : composers | vws::filter([](const auto& y) {  // since 1700
+                           return y.second >= 1700;
+                         }) | vws::take(3)  // first three
+                             | vws::keys    // keys/names only
+  ) {
+    std::cout << "- " << elem << '\n';
+  }
+
+  std::vector<std::pair<int, int>> vp{
+      {1, 5},
+      {2, 4},
+      {3, 3},
+      {4, 2},
+      {5, 1},
+  };
+
+  for(const auto& [k, v] : composers | std::views::take(5) | std::views::drop(2)) printf("%s, %d\n", k.c_str(), v);
+
+  auto corotask = coro(10);
+  while(corotask.resume()) {
+    std::cout << "coro() suspended" << std::endl;
+  }
 }
