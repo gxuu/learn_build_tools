@@ -3,7 +3,4 @@
 
 #include <string>
 
-std::string string_utility_test()
-{
-  return "basic string returning, hi!";
-}
+std::string string_utility_test() { return "basic string returning, hi!"; }

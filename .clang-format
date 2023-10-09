@@ -111,6 +111,7 @@ IndentRequires:  false
 IndentWidth:     2
 IndentWrappedFunctionNames: false
 InsertTrailingCommas: None
+# InsertNewlineAtEOF: true
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
@@ -213,7 +214,7 @@ StatementAttributeLikeMacros:
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
-TabWidth:        8
+TabWidth:        2
 UseCRLF:         false
 UseTab:          Never
 WhitespaceSensitiveMacros:
